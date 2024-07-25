@@ -11,7 +11,6 @@ function useAuth0Api() {
   api.interceptors.request.use(async (config) => {
     const token = await getAccessTokenSilently();
 
-    // eslint-disable-next-line no-param-reassign
     config.headers.Authorization = `Bearer ${token}`;
     return config;
   });

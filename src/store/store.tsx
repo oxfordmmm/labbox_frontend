@@ -1,8 +1,8 @@
 import { signal } from "@preact/signals-react";
 
-import { MutationData } from "@/lib/Types";
+import { UploadDataType } from "@/lib/Types";
 
-export const UploadData = signal<MutationData>({
+export const UploadData = signal<UploadDataType>({
   type: "",
   msg: "",
   logs: [],

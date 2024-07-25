@@ -10,7 +10,7 @@ function LogoutButton({ className }: LoginButtonProps) {
   const handleClick = () => {
     logout()
       .then(() => {
-        console.log("Login successful");
+        console.log("Logout successful");
       })
       .catch((error) => {
         console.error(error);

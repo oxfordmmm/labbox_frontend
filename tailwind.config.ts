@@ -1,4 +1,3 @@
-/* eslint-disable import/no-extraneous-dependencies */
 import type { Config } from "tailwindcss";
 
 // can not use the @ alias here
