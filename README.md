@@ -10,7 +10,7 @@ developed with version 21.7.3. A `.mise.toml` file is provided, if you use Mise
 
 ## Install dependencies
 
-`cd` into the frontend directory. And install the dependencies with `node
+`cd` into the frontend directory. And install the dependencies with `npm
 install`.
 
 ## Setup environmental variables
@@ -25,7 +25,7 @@ REACT_APP_AUTH0_CLIENT_SECRET=your-client-secret
 REACT_APP_AUTH0_AUDIENCE=your-audience
 ```
 
-Please make sure not to share or copy the `.env` file to any repos. An for
+Please make sure NOT to share or copy the `.env` file to any repos. An for
 `.env` is includine in both the `.gitignore` and `.dockerignore` files for this
 purpose
 

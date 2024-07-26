@@ -6,12 +6,13 @@ import * as certPath from "path";
 import react from "@vitejs/plugin-react-swc";
 import * as dotenv from "dotenv";
 import { defineConfig } from "vite";
+import tsconfigPaths from "vite-tsconfig-paths";
 
 dotenv.config();
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), tsconfigPaths()],
   server: {
     host: "localhost",
     port: 3000,
@@ -22,22 +23,10 @@ export default defineConfig({
         rewrite: (path) => path.replace(/^\/api/, ""),
       },
     },
-    // configureServer: ({ middlewares }) => {
-    //   middlewares.use((req, res, next) => {
-    //     console.log("Proxied URL:", req.url);
-    //     next();
-    //   });
-    // },
-  },
-  test: {
-    globals: true,
-    environment: "jsdom",
-    setupFiles: ["./src/setupTests.ts"],
   },
   resolve: {
     alias: {
       "@": certPath.resolve(__dirname, "./src"),
-      // components: certPath.resolve(__dirname, "./src/components"),
     },
   },
   build: {

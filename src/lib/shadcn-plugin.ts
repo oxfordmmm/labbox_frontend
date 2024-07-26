@@ -1,4 +1,3 @@
-/* eslint-disable import/no-extraneous-dependencies */
 import plugin from "tailwindcss/plugin";
 
 export const shadcnPlugin = plugin(
