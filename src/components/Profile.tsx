@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { useAuth0 } from "@auth0/auth0-react";
 
 import useAuth0Roles from "../utils/useAuth0Roles";

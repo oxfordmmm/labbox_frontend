@@ -5,7 +5,7 @@ import useAuth0Api from "./useAuth0Api";
 function usePrivateData() {
   const api = useAuth0Api();
 
-  const options: UseQueryOptions<unknown, Error> = {
+  const options: UseQueryOptions = {
     queryKey: ["privateData"],
     queryFn: async () => {
       const response: { data: unknown } = await api.get("/private");

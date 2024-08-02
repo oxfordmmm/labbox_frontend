@@ -15,7 +15,7 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { UploadData } from "@/lib/Types";
+import { UploadDataType } from "@/lib/Types";
 import { readCSV } from "@/lib/utils";
 import { useUploadData } from "@/store/useStore";
 import useAuth0Api from "@/utils/useAuth0Api";
@@ -54,7 +54,7 @@ function MutationUpload() {
     setDryRun(checked);
   };
 
-  async function uploadFile(formData: FormData): Promise<UploadData> {
+  async function uploadFile(formData: FormData): Promise<UploadDataType> {
     try {
       const response = await api.post("/mutation/upload", formData, {
         headers: {
@@ -70,7 +70,7 @@ function MutationUpload() {
         },
       });
 
-      return response.data as UploadData;
+      return response.data as UploadDataType;
     } catch (error) {
       console.error(error);
       throw error;
@@ -79,7 +79,7 @@ function MutationUpload() {
 
   const upload = useMutation({
     mutationFn: uploadFile,
-    onSuccess: (data: UploadData) => {
+    onSuccess: (data: UploadDataType) => {
       uploadData.value = {
         type: "Mutation Upload",
         msg: data.msg,

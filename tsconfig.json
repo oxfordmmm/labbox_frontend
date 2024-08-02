@@ -27,6 +27,6 @@
       // "@utils/*": ["utils/*"],
     }
   },
-  "include": ["vite.config.ts", ".eslintrc.js", "tailwind.config.ts", "src", "postcss.config.cjs"],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "include": ["src"],
+  "references": [{ "path": "./tsconfig.node.json" }],
 }

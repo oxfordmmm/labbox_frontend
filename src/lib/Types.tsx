@@ -4,7 +4,7 @@ export interface LogEntry {
   msg: string;
 }
 
-export interface UploadData {
+export interface UploadDataType {
   type: string;
   msg: string;
   logs: LogEntry[];
