@@ -1,7 +1,7 @@
 /// <reference types="vitest" />
 /// <reference types="vite/client" />
 
-import * as certPath from "path";
+import path from "path";
 
 import react from "@vitejs/plugin-react-swc";
 import * as dotenv from "dotenv";
@@ -26,7 +26,9 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      "@": certPath.resolve(__dirname, "./src"),
+      "@": path.resolve(__dirname, "./src"),
+      "@components": path.resolve(__dirname, "./src/components"),
+      root: "/",
     },
   },
   build: {

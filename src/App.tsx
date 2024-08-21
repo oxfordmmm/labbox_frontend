@@ -11,8 +11,11 @@ import NotFoundPage from "./pages/NotFoundPage";
 import SpreadsheetUploadPage from "./pages/SpreadsheetUploadPage";
 import SummaryUploadPage from "./pages/SummaryUploadPage";
 import UploadResultPage from "./pages/UploadResultPage";
+import { useInitializeApi } from "./utils/api";
 
 function App(): JSX.Element {
+  useInitializeApi();
+
   const queryClient = new QueryClient();
   return (
     <ThemeProvider>
@@ -21,12 +24,12 @@ function App(): JSX.Element {
           <Route path="/" element={<MainLayout />}>
             <Route index element={<HomePage />} />
             <Route path="about" element={<AboutPage />} />
-            <Route path="*" element={<NotFoundPage />} />
             <Route path="runs" element={<NotFoundPage />} />
             <Route path="excel-upload" element={<SpreadsheetUploadPage />} />
             <Route path="mutation-upload" element={<MutationUploadPage />} />
             <Route path="summary-upload" element={<SummaryUploadPage />} />
             <Route path="upload-result" element={<UploadResultPage />} />
+            <Route path="*" element={<NotFoundPage />} />
           </Route>
         </Routes>
         <ReactQueryDevtools initialIsOpen={false} />

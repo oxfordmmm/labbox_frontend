@@ -23,10 +23,11 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*", "./dist/*", ""],
-      // "@components/*": ["components/*"],
-      // "@utils/*": ["utils/*"],
+      "@components/*": ["./src/components/*", "./dist/components/*", ""],
+      "root/*": ["*"],
     }
   },
-  "include": ["src"],
+  "include": ["src", ".vitest/setupTests.ts"],
   "references": [{ "path": "./tsconfig.node.json" }],
+  "types": ["node", "jest", "@testing-library/jest-dom"],
 }

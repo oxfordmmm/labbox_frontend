@@ -1,7 +1,9 @@
-import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { useCheckboxChange } from "@/hooks/useCheckboxChange";
+import { useFileChange } from "@/hooks/useFileChange";
+import { useFileUpload } from "@/hooks/useFileUpload";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -18,110 +20,68 @@ import { Label } from "@/components/ui/label";
 import { UploadDataType } from "@/lib/Types";
 import { readCSV } from "@/lib/utils";
 import { useUploadData } from "@/store/useStore";
-import useAuth0Api from "@/utils/useAuth0Api";
 
-import Spinner from "./Spinner";
+import Spinner from "@components/Spinner";
 
 function SummaryUpload() {
-  const [summaryFile, setSummaryFile] = useState<File | null>(null);
-  const [mappingFile, setMappingFile] = useState<File | null>(null);
-  const [dryRun, setDryRun] = useState<boolean>(true);
   const [isProcessing, setIsProcessing] = useState(false);
-  const api = useAuth0Api();
-  const [uploadPercentage, setUploadPercentage] = useState<number>(0);
   const uploadData = useUploadData();
   const navigate = useNavigate();
+  const [dryRun, handleCheckboxChange] = useCheckboxChange();
+  const [summaryFile, handleSummaryFileChange] = useFileChange();
+  const [mappingFile, handleMappingFileChange] = useFileChange();
+  const { uploadPercentage, fileUpload } = useFileUpload("/summary/upload");
 
-  const handleSummaryFileChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const { files } = event.target;
-    if (files?.[0]) {
-      setSummaryFile(files[0]);
-    }
-  };
-
-  const handleMappingFileChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const { files } = event.target;
-    if (files?.[0]) {
-      setMappingFile(files[0]);
-    }
-  };
-
-  const handleCheckboxChange = (checked: boolean) => {
-    setDryRun(checked);
-  };
-
-  async function uploadFile(formData: FormData): Promise<UploadDataType> {
+  const handleUpload = async (): Promise<void> => {
     try {
-      const response = await api.post("/summary/upload", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-        onUploadProgress: (progressEvent) => {
-          if (progressEvent.total) {
-            const percentCompleted = Math.round(
-              (progressEvent.loaded * 100) / progressEvent.total
-            );
-            setUploadPercentage(percentCompleted);
-          }
-        },
-      });
-
-      return response.data as UploadDataType;
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  }
-
-  const upload = useMutation({
-    mutationFn: uploadFile,
-    onSuccess: (data: UploadDataType) => {
-      uploadData.value = {
-        type: "Summary Upload",
-        msg: data.msg,
-        logs: data.logs,
-      };
-
-      console.log("Data uploaded successfully", data.logs);
-      console.log("Data uploaded successfully", data.msg);
-
-      toast.success(data.msg);
-
-      navigate("/upload-result");
-    },
-    onError: () => {
-      toast.error("Error uploading data");
-    },
-  });
-
-  async function handleUpload(): Promise<void> {
-    try {
-      setIsProcessing(true);
       if (summaryFile && mappingFile) {
+        setIsProcessing(true);
         const formData = new FormData();
+
+        console.log("Reading CSV files...");
 
         const mutationJson: Record<string, unknown>[] =
           await readCSV(summaryFile);
         const mappingJson: Record<string, unknown>[] =
           await readCSV(mappingFile);
 
-        console.log(mutationJson);
-        console.log(mappingJson);
+        console.log("setting the form data...");
 
         formData.append("Summary", JSON.stringify(mutationJson));
         formData.append("Mapping", JSON.stringify(mappingJson));
         formData.append("dryRun", dryRun.toString());
 
-        upload.mutate(formData);
+        console.log("uploading the form data...");
+
+        await new Promise<void>((resolve, reject) => {
+          console.log("calling the mutate function...");
+          fileUpload.mutate(formData, {
+            onSuccess: (data: UploadDataType) => {
+              uploadData.value = {
+                type: "Summary Upload",
+                msg: data.msg,
+                logs: data.logs,
+              };
+              toast.success(data.msg);
+              navigate("/upload-result");
+              console.log("Data uploaded successfully");
+              resolve();
+            },
+            onError: () => {
+              toast.error("Error uploading data");
+              reject();
+            },
+            onSettled: () => {
+              setIsProcessing(false);
+            },
+          });
+        });
       }
-    } finally {
+    } catch (error) {
       setIsProcessing(false);
+      toast.error("An unexpected error occurred");
     }
-  }
+  };
 
   const handleClick = () => {
     if (!summaryFile || !mappingFile) {
@@ -196,21 +156,21 @@ function SummaryUpload() {
             <Spinner loading={isProcessing} />
           </>
         ) : null}
-        {upload.isPending ? (
+        {fileUpload.isPending ? (
           <div>
             <p>Uploading... {uploadPercentage}%</p>
             <progress value={uploadPercentage} max="100" />
           </div>
         ) : null}
-        {upload.isError ? (
+        {fileUpload.isError ? (
           <p>
             Error:{" "}
-            {upload.error instanceof Error
-              ? upload.error.message
+            {fileUpload.error instanceof Error
+              ? fileUpload.error.message
               : "Unknown error"}
           </p>
         ) : null}
-        {!isProcessing && upload.isSuccess ? (
+        {!isProcessing && fileUpload.isSuccess ? (
           <p>Data uploaded successfully!</p>
         ) : null}
       </CardContent>
@@ -220,7 +180,7 @@ function SummaryUpload() {
           type="button"
           className="rounded-md px-3 py-2"
           onClick={handleClick}
-          disabled={isProcessing}
+          disabled={!summaryFile || !mappingFile || isProcessing}
         >
           Upload and Convert
         </Button>

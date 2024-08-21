@@ -24,7 +24,7 @@ import OUHlogo from "../assets/images/ouh_logo_white.png";
 
 import LoginButton from "./LoginButton";
 import LogoutButton from "./LogoutButtion";
-import ThemeToggle from "./ThemeToogle";
+import ThemeToggle from "./ThemeToggle";
 
 const viewLinks: { title: string; href: string; description: string }[] = [
   {
@@ -80,7 +80,10 @@ function Navbar() {
 
   return (
     <main>
-      <nav className="grid grid-cols-2 items-center border-b border-indigo-500 bg-oxford-blue px-8 py-6">
+      <nav
+        data-testid="navbar"
+        className="grid grid-cols-2 items-center border-b border-indigo-500 bg-oxford-blue px-8 py-6"
+      >
         {/* left navbar items */}
         <section className="flex gap-4">
           <FiMenu

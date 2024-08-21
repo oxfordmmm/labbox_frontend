@@ -1,27 +1,31 @@
-import { render, screen } from "@testing-library/react";
-import { MemoryRouter } from "react-router-dom";
+import { render, screen, waitFor } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
+import { BrowserRouter, MemoryRouter } from "react-router-dom";
 
-import { App, WrappedApp } from "./App";
+import { App } from "./App";
 
 describe("App", () => {
   it("renders Navbar", () => {
-    render(<WrappedApp />);
-    const navbarElement = screen.getByRole("navigation");
+    render(<App />, { wrapper: BrowserRouter });
+    screen.debug(undefined, Infinity);
+    const navbarElement = screen.getByTestId("navbar");
     expect(navbarElement).toBeInTheDocument();
   });
   it("renders Home Page", () => {
-    render(<WrappedApp />);
-    const homePageElement = screen.getByText(/HomePage/i);
+    render(<App />, { wrapper: BrowserRouter });
+    const homePageElement = screen.getByTestId("homepage");
     expect(homePageElement).toBeInTheDocument();
   });
-  it("Renders not found if invalid path", () => {
+  it("Renders 'not found' page if invalid path", async () => {
     render(
       <MemoryRouter initialEntries={["/invalid"]}>
         <App />
       </MemoryRouter>
     );
-    const notFoundElement = screen.getByText(/NotFound/i);
-    expect(notFoundElement).toBeInTheDocument();
+
+    await waitFor(() => {
+      const notFoundElement = screen.getByText("404 Not Found");
+      expect(notFoundElement).toBeInTheDocument();
+    });
   });
 });

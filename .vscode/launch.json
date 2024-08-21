@@ -10,6 +10,24 @@
       "name": "Launch Chrome against labbox.localhost",
       "url": "https://labbox.localhost",
       "webRoot": "${workspaceFolder}"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug Vitest Tests",
+      "program": "${workspaceFolder}/node_modules/vitest/vitest.mjs",
+      "args": [
+        "--run",
+        "--config",
+        "${workspaceFolder}/vitest.config.ts"
+      ],
+      "autoAttachChildProcesses": true,
+      "smartStep": true,
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "env": {
+        "NODE_ENV": "test"
+      }
     }
   ]
 }
