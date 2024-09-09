@@ -1,0 +1,4 @@
+labbox.localhost {
+	reverse_proxy http://localhost:3000
+	tls self-signed-certs/labbox.localhost.crt self-signed-certs/labbox.localhost.key
+}

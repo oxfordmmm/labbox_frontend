@@ -40,6 +40,66 @@ installed use the following command to run the reverse proxy:
 caddy reverse-proxy --from labbox.localhost --to labbox.localhost:3000
 ```
 
+If you want to have trusted certificate, you can do the following step
+```bash
+# Generate a certificate signed by Caddy CA Intermediate cert
+make gen-cert
+
+# Make sure you have the dev server on port 3000, because Caddy is configured to forward traffic to this port
+...
+
+# Run caddy
+make run-caddy
+
+```
+
+You will then need to add CA certificate to your browser. 
+- Caddy Intermediate cert is usually located at `~/.local/share/caddy/pki/authorities/local/intermediate.crt`
+
+For Chrome
+- Open Chrome Settings:
+  - Click the three vertical dots in the top-right corner of Chrome.
+  - Select "Settings."
+
+- Access Security Settings
+    - Scroll down and click on "Privacy and security."
+    - Click on "Security."
+
+- Manage Certificates
+    - Scroll down and click on "Manage certificates."
+
+- Import Root Certificate:
+    - In the "Certificate Manager" window, go to the "Authorities" tab.
+    - Click "Import."
+    - Navigate to the root certificate file located in `/.local/share/caddy/pki/authorities/local/intermediate.crt`.
+    - Select the file and click "Open."
+
+- Trust Certificate:
+    - In the import dialog, make sure "Trust this CA to identify websites" is checked.
+    - Click "OK" to complete the import.
+
+For Firefox
+- Open Firefox Settings:
+    - Click the three horizontal lines in the top-right corner of Firefox.
+    - Select "Settings."
+
+- Access Privacy & Security Settings:
+    - Click on "Privacy & Security" in the left sidebar.
+
+- Manage Certificates:
+    - Scroll down to the "Certificates" section.
+    - Click on "View Certificates."
+
+- Import Root Certificate:
+    - In the "Certificate Manager" window, go to the "Authorities" tab.
+    - Click "Import."
+    - Navigate to the root certificate file located in `~/.local/share/caddy/pki/authorities/local/intermediate.crt`.
+    - Select the file and click "Open."
+
+- Trust Certificate:
+    - In the import dialog, check the boxes for "Trust this CA to identify websites."
+    - Click "OK" to complete the import.
+
 ## Running frontend
 
 Use `npm run dev` to run the frontend. You will notice that the frontend runs on
